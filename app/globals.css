@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    /* JJC Brand Colors */
+    --primary: 160 84% 39%; /* #10b981 - Emerald Green */
+    --primary-dark: 160 90% 22%; /* #059669 */
+    --primary-light: 160 70% 50%; /* #34d399 */
+    --secondary: 48 96% 89%; /* #fef3c7 - Pearl White/Cream */
+    --accent: 43 96% 56%; /* #fbbf24 - Gold/Yellow */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-white text-gray-900;
+  }
+  
+  /* JJC Brand Color Accents */
+  .text-jjc-green {
+    color: #10b981;
+  }
+  .bg-jjc-green {
+    background-color: #10b981;
+  }
+  .text-jjc-pearl {
+    color: #fef3c7;
+  }
+  .bg-jjc-pearl {
+    background-color: #fef3c7;
+  }
+  .text-jjc-gold {
+    color: #fbbf24;
+  }
+  .bg-jjc-gold {
+    background-color: #fbbf24;
+  }
+}
+
