@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -60,24 +60,7 @@ export default function CommunityPage() {
     defaultValues: { type: "request" as const, subject: "", description: "" },
   });
 
-  useEffect(() => {
-    if (supabaseConfigured) {
-      // Always load forum posts (public)
-      loadForumPosts();
-      setupRealtime();
-      
-      // Only load complaints if user is logged in
-      if (user) {
-        loadComplaints();
-      } else {
-        setLoading(false);
-      }
-    } else if (!supabaseConfigured) {
-      setLoading(false);
-    }
-  }, [user, supabaseConfigured]);
-
-  const loadForumPosts = async () => {
+  const loadForumPosts = useCallback(async () => {
     if (!supabaseConfigured) return;
     
     try {
@@ -117,9 +100,9 @@ export default function CommunityPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabaseConfigured]);
 
-  const loadComplaints = async () => {
+  const loadComplaints = useCallback(async () => {
     if (!user || !supabaseConfigured) return;
 
     try {
@@ -135,10 +118,10 @@ export default function CommunityPage() {
     } catch (error) {
       console.error("Error loading complaints:", error);
     }
-  };
+  }, [user, supabaseConfigured]);
 
-  const setupRealtime = () => {
-    if (!supabaseConfigured) return;
+  const setupRealtime = useCallback(() => {
+    if (!supabaseConfigured) return null;
     
     const supabase = createClient();
     const channel = supabase
@@ -176,7 +159,26 @@ export default function CommunityPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  };
+  }, [supabaseConfigured]);
+
+  useEffect(() => {
+    if (supabaseConfigured) {
+      // Always load forum posts (public)
+      loadForumPosts();
+      const cleanup = setupRealtime();
+      
+      // Only load complaints if user is logged in
+      if (user) {
+        loadComplaints();
+      } else {
+        setLoading(false);
+      }
+      
+      return cleanup;
+    } else if (!supabaseConfigured) {
+      setLoading(false);
+    }
+  }, [user, supabaseConfigured, loadForumPosts, loadComplaints, setupRealtime]);
 
   const onSubmitPost = async (data: z.infer<typeof forumPostSchema>) => {
     if (!user) {
@@ -445,7 +447,7 @@ export default function CommunityPage() {
           <DialogHeader>
             <DialogTitle>Submit Complaint or Request</DialogTitle>
             <DialogDescription>
-              Let us know how we can help. We'll review your submission and get back to you.
+              Let us know how we can help. We&apos;ll review your submission and get back to you.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={complaintForm.handleSubmit(onSubmitComplaint)} className="space-y-4">

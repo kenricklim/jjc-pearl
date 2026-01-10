@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 import type { Profile, ComplaintRequest } from "@/types/database";
 
 export default function AdminPage() {
@@ -34,6 +35,7 @@ export default function AdminPage() {
     }
 
     checkAdminStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading, router]);
 
   const checkAdminStatus = async () => {
@@ -276,9 +278,11 @@ export default function AdminPage() {
                       <td className="p-3">
                         <div className="flex items-center space-x-2">
                           {profile.avatar_url ? (
-                            <img
+                            <Image
                               src={profile.avatar_url}
                               alt={profile.display_name || "User"}
+                              width={32}
+                              height={32}
                               className="h-8 w-8 rounded-full"
                             />
                           ) : (
