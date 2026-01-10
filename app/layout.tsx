@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Disable static generation for this layout since it uses AuthProvider
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({
   children,
 }: Readonly<{
