@@ -419,7 +419,7 @@ export default function CommunityPage() {
           <form onSubmit={forumForm.handleSubmit(onSubmitPost)} className="space-y-4">
             <Textarea
               {...forumForm.register("content")}
-              placeholder="What's on your mind?"
+              placeholder="What&apos;s on your mind?"
               rows={4}
             />
             {forumForm.formState.errors.content && (
