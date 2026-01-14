@@ -81,7 +81,7 @@ export function Navbar() {
               {/* Logo Image */}
               <div className="relative h-10 w-10 flex-shrink-0">
                 <Image
-                  src="/new jjc logo.jfif"
+                  src="/new-jjc-logo.jfif"
                   alt="JJC Puerto Princesa Perlas Logo"
                   fill
                   className="object-contain"

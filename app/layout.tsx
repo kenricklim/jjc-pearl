@@ -20,10 +20,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/new jjc logo.jfif", type: "image/jpeg" },
+      { url: "/new-jjc-logo.jfif", type: "image/jpeg" },
     ],
     apple: [
-      { url: "/new jjc logo.jfif", type: "image/jpeg" },
+      { url: "/new-jjc-logo.jfif", type: "image/jpeg" },
     ],
   },
 };
