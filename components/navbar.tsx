@@ -79,14 +79,11 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="flex items-center space-x-2">
               {/* Logo Image */}
-              <div className="relative h-10 w-10 flex-shrink-0">
-                <Image
+              <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center">
+                <img
                   src="/new-jjc-logo.jfif"
                   alt="JJC Puerto Princesa Perlas Logo"
-                  fill
-                  className="object-contain"
-                  priority
-                  sizes="40px"
+                  className="h-full w-full object-contain"
                 />
               </div>
               <span className="font-bold text-lg text-secondary">
