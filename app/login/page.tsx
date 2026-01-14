@@ -180,7 +180,7 @@ export default function LoginPage() {
               onClick={handleGoogleLogin}
               disabled={loading}
               size="lg"
-              className="w-full"
+              className="w-full bg-primary hover:bg-primary-600 text-white"
             >
               {loading ? "Signing in..." : "Sign in with Google"}
             </Button>

@@ -36,6 +36,8 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(true);
   const [postDialogOpen, setPostDialogOpen] = useState(false);
   const [complaintDialogOpen, setComplaintDialogOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<ComplaintRequest | null>(null);
+  const [ticketDetailsOpen, setTicketDetailsOpen] = useState(false);
   const [supabaseConfigured, setSupabaseConfigured] = useState(false);
 
   useEffect(() => {
@@ -381,7 +383,14 @@ export default function CommunityPage() {
                 ) : (
                 <div className="space-y-4">
                   {complaints.map((ticket) => (
-                    <Card key={ticket.id}>
+                    <Card 
+                      key={ticket.id}
+                      className="cursor-pointer hover:shadow-md transition-shadow"
+                      onClick={() => {
+                        setSelectedTicket(ticket);
+                        setTicketDetailsOpen(true);
+                      }}
+                    >
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
@@ -393,7 +402,12 @@ export default function CommunityPage() {
                               {ticket.type === "complaint" ? "Complaint" : "Request"} •{" "}
                               {new Date(ticket.created_at).toLocaleDateString()}
                             </p>
-                            <p className="text-gray-700">{ticket.description}</p>
+                            <p className="text-gray-700 line-clamp-2">{ticket.description}</p>
+                            {ticket.status === "resolved" && ticket.admin_reply && (
+                              <p className="text-sm text-primary mt-2 font-medium">
+                                ✓ Resolved - Click to view details
+                              </p>
+                            )}
                           </div>
                         </div>
                       </CardContent>
@@ -497,6 +511,80 @@ export default function CommunityPage() {
               <Button type="submit">Submit</Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Ticket Details Dialog */}
+      <Dialog open={ticketDetailsOpen} onOpenChange={setTicketDetailsOpen}>
+        <DialogContent onClose={() => setTicketDetailsOpen(false)} className="max-w-2xl">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <DialogTitle>Ticket Details</DialogTitle>
+              {selectedTicket && getStatusBadge(selectedTicket.status)}
+            </div>
+            <DialogDescription>
+              {selectedTicket?.type === "complaint" ? "Complaint" : "Request"} submitted on{" "}
+              {selectedTicket && new Date(selectedTicket.created_at).toLocaleString()}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedTicket && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-500 mb-1">Subject</h3>
+                <p className="text-gray-900 font-medium">{selectedTicket.subject}</p>
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-semibold text-gray-500 mb-1">Description</h3>
+                <p className="text-gray-700 whitespace-pre-wrap">{selectedTicket.description}</p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-gray-500 mb-1">Status</h3>
+                <div className="flex items-center gap-2">
+                  {getStatusBadge(selectedTicket.status)}
+                  <span className="text-sm text-gray-600">
+                    {selectedTicket.status === "pending" && "Waiting for admin review"}
+                    {selectedTicket.status === "in_progress" && "Admin is working on this"}
+                    {selectedTicket.status === "resolved" && "This ticket has been resolved"}
+                  </span>
+                </div>
+              </div>
+
+              {selectedTicket.status === "resolved" && selectedTicket.admin_reply && (
+                <div className="bg-primary/10 border-l-4 border-primary p-4 rounded-r-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="h-5 w-5 text-primary" />
+                    <h3 className="text-sm font-semibold text-primary">Resolution</h3>
+                  </div>
+                  {selectedTicket.admin_reply_at && (
+                    <p className="text-xs text-gray-500 mb-2">
+                      Resolved on {new Date(selectedTicket.admin_reply_at).toLocaleString()}
+                    </p>
+                  )}
+                  <p className="text-gray-900 whitespace-pre-wrap">{selectedTicket.admin_reply}</p>
+                </div>
+              )}
+
+              {selectedTicket.status !== "resolved" && (
+                <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-gray-500" />
+                    <p className="text-sm text-gray-600">
+                      {selectedTicket.status === "pending" 
+                        ? "Your ticket is pending review. An admin will respond soon."
+                        : "Your ticket is being processed. We'll update you once it's resolved."}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="flex justify-end mt-6">
+            <Button variant="outline" onClick={() => setTicketDetailsOpen(false)}>
+              Close
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -595,7 +595,7 @@ export default function AdminPage() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
-              <CheckCircle className="h-8 w-8 text-green-500" />
+              <CheckCircle className="h-8 w-8 text-accent" />
               <div>
                 <p className="text-2xl font-bold">
                   {tickets.filter((t) => t.status === "resolved").length}

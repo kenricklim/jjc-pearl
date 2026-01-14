@@ -10,35 +10,48 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // OFFICIAL JCI PALETTE
         primary: {
-          DEFAULT: "#10b981", // Emerald Green (JCI/JJC Brand Color)
-          dark: "#059669",
-          light: "#34d399",
-          50: "#ecfdf5",
-          100: "#d1fae5",
-          200: "#a7f3d0",
-          300: "#6ee7b7",
-          400: "#34d399",
-          500: "#10b981",
-          600: "#059669",
-          700: "#047857",
-          800: "#065f46",
-          900: "#064e3b",
+          DEFAULT: "#0097D7", // JCI Aqua (Main Brand Color)
+          foreground: "#FFFFFF",
+          dark: "#0077B6",
+          light: "#33B5E5",
+          50: "#E6F7FD",
+          100: "#CCEFFB",
+          200: "#99DFF7",
+          300: "#66CFF3",
+          400: "#33BFEF",
+          500: "#0097D7",
+          600: "#0077B6",
+          700: "#005795",
+          800: "#003774",
+          900: "#001753",
         },
         secondary: {
-          DEFAULT: "#fef3c7", // Pearl White/Cream (Perlas reference)
-          dark: "#fde68a",
-          light: "#fffbeb",
+          DEFAULT: "#0A0F29", // JCI Navy (Deep Blue for Text/Footer)
+          foreground: "#FFFFFF",
+          dark: "#070A1C",
+          light: "#1A1F3A",
         },
         accent: {
-          DEFAULT: "#fbbf24", // Gold/Yellow (JCI Accent)
-          dark: "#f59e0b",
-          light: "#fcd34d",
+          DEFAULT: "#56BDA3", // Nature Green (JCI Seafoam)
+          foreground: "#FFFFFF",
+          dark: "#3FA085",
+          light: "#7DD4C0",
         },
+        // CUSTOM PERLAS THEME
+        pearl: {
+          DEFAULT: "#F8F9FA", // Soft Pearl/Cream for backgrounds
+          50: "#FFFFFF",
+          100: "#F8F9FA",
+          200: "#E9ECEF", // Darker pearl for borders
+        },
+        // Legacy JJC colors for backward compatibility
         jjc: {
-          green: "#10b981", // Primary JJC Green
-          pearl: "#fef3c7", // Pearl White
-          gold: "#fbbf24", // Gold Accent
+          aqua: "#0097D7", // JCI Aqua
+          navy: "#0A0F29", // JCI Navy
+          green: "#56BDA3", // Nature Green
+          pearl: "#F8F9FA", // Pearl White
         },
       },
       fontFamily: {

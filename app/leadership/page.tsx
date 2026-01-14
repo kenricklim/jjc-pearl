@@ -3,6 +3,38 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { User } from "lucide-react";
+import Image from "next/image";
+
+// Helper function to get image path for a member
+const getMemberImage = (name: string): string | null => {
+  const imageMap: Record<string, string> = {
+    "Suzane Valdez": "Suzane Valdez.jpg",
+    "Jessa Merl G. Terrado": "Jessa terrado.jpg",
+    "Cristine V. Arzaga": "Cristine Arzaga.jpg",
+    "Garry Loyd G. Lagan": "Garry Lagan.jpg",
+    "Allysa Denise T. Ducax": "allyssa ducay.jpg",
+    "Rosanie L. Eleazar": "Rosanie Eleazar.jpg",
+    "Justine Jaye B. Delos Reyes": "Justine Jace Delos Reyes.jpg",
+    "Yasmien Jade A. Aban": "Aba,  Yasmien.jpg",
+    "Eremil C. Aborot": "Erimil aborot.jpg",
+    "Arianna Avel T. Amora": "Arinna Amora.jpg",
+    "Krisha Jane L. Fabrigas": "Krisha Jane Fabrigas.jpg",
+    "Karen R. Garcellano": "Karen Garcellano.jpg",
+  };
+  
+  const imageName = imageMap[name];
+  return imageName ? `/bod-and-members/${imageName}` : null;
+};
+
+// Helper function to get custom object position for specific members
+const getImagePosition = (name: string): string => {
+  const positionMap: Record<string, string> = {
+    "Eremil C. Aborot": "object-[center_top]", // Position to show face area at the top center
+    "Suzane Valdez": "object-center", // Center the image for better clarity
+  };
+  
+  return positionMap[name] || "";
+};
 
 const boardMembers = [
   {
@@ -103,8 +135,8 @@ export default function LeadershipPage() {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">Leadership</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <h1 className="text-5xl font-bold text-secondary mb-4">Leadership</h1>
+        <p className="text-xl text-secondary/80 max-w-3xl mx-auto">
           2025-2026 Junior Jaycees Puerto Princesa Perlas Board of Directors
         </p>
       </motion.div>
@@ -116,7 +148,7 @@ export default function LeadershipPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-3xl font-bold text-gray-900 mb-8 text-center"
+          className="text-3xl font-bold text-secondary mb-8 text-center"
         >
           Executive Board
         </motion.h2>
@@ -131,8 +163,29 @@ export default function LeadershipPage() {
             >
               <Card className="h-full hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <User className="h-12 w-12 text-primary" />
+                  <div className={`rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 overflow-hidden relative ${
+                    member.name === "Suzane Valdez" ? "h-52 w-52" : "h-48 w-48"
+                  }`}>
+                    {getMemberImage(member.name) ? (
+                      <Image
+                        src={getMemberImage(member.name)!}
+                        alt={member.name}
+                        fill
+                        className={`object-cover rounded-full ${getImagePosition(member.name)}`}
+                        style={
+                          member.name === "Eremil C. Aborot" 
+                            ? { objectPosition: "center top" } 
+                            : member.name === "Suzane Valdez"
+                            ? { objectPosition: "center center", objectFit: "cover" }
+                            : undefined
+                        }
+                        sizes={member.name === "Suzane Valdez" ? "208px" : "192px"}
+                        quality={95}
+                        priority={member.name === "Suzane Valdez"}
+                      />
+                    ) : (
+                      <User className="h-12 w-12 text-primary" />
+                    )}
                   </div>
                   <CardTitle className="text-center text-xl">{member.name}</CardTitle>
                 </CardHeader>
@@ -169,8 +222,29 @@ export default function LeadershipPage() {
             >
               <Card className="h-full hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <User className="h-12 w-12 text-primary" />
+                  <div className={`rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 overflow-hidden relative ${
+                    member.name === "Suzane Valdez" ? "h-52 w-52" : "h-48 w-48"
+                  }`}>
+                    {getMemberImage(member.name) ? (
+                      <Image
+                        src={getMemberImage(member.name)!}
+                        alt={member.name}
+                        fill
+                        className={`object-cover rounded-full ${getImagePosition(member.name)}`}
+                        style={
+                          member.name === "Eremil C. Aborot" 
+                            ? { objectPosition: "center top" } 
+                            : member.name === "Suzane Valdez"
+                            ? { objectPosition: "center center", objectFit: "cover" }
+                            : undefined
+                        }
+                        sizes={member.name === "Suzane Valdez" ? "208px" : "192px"}
+                        quality={95}
+                        priority={member.name === "Suzane Valdez"}
+                      />
+                    ) : (
+                      <User className="h-12 w-12 text-primary" />
+                    )}
                   </div>
                   <CardTitle className="text-center text-xl">{member.name}</CardTitle>
                 </CardHeader>
@@ -194,8 +268,8 @@ export default function LeadershipPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Founding Members</h2>
-          <p className="text-gray-600">
+          <h2 className="text-3xl font-bold text-secondary mb-4">Founding Members</h2>
+          <p className="text-secondary/80">
             Created on March 12, 2023 by JCI Puerto Princesa Kiao Inc.
           </p>
         </motion.div>

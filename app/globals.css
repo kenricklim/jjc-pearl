@@ -7,12 +7,12 @@
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --border: 214.3 31.8% 91.4%;
-    /* JJC Brand Colors */
-    --primary: 160 84% 39%; /* #10b981 - Emerald Green */
-    --primary-dark: 160 90% 22%; /* #059669 */
-    --primary-light: 160 70% 50%; /* #34d399 */
-    --secondary: 48 96% 89%; /* #fef3c7 - Pearl White/Cream */
-    --accent: 43 96% 56%; /* #fbbf24 - Gold/Yellow */
+    /* JCI Brand Colors */
+    --primary: 199 89% 48%; /* #0097D7 - JCI Aqua Blue */
+    --primary-dark: 199 89% 38%; /* #0077B6 - Darker JCI Aqua */
+    --primary-light: 199 89% 58%; /* #33B5E5 - Lighter JCI Aqua */
+    --secondary: 230 50% 10%; /* #0A0F29 - JCI Navy Blue */
+    --accent: 164 48% 51%; /* #56BDA3 - Nature Green */
   }
 }
 
@@ -24,24 +24,24 @@
     @apply bg-white text-gray-900;
   }
   
-  /* JJC Brand Color Accents */
-  .text-jjc-green {
-    color: #10b981;
+  /* JCI Brand Color Accents */
+  .text-jci-aqua {
+    color: #0097D7;
   }
-  .bg-jjc-green {
-    background-color: #10b981;
+  .bg-jci-aqua {
+    background-color: #0097D7;
   }
-  .text-jjc-pearl {
-    color: #fef3c7;
+  .text-jci-navy {
+    color: #0A0F29;
   }
-  .bg-jjc-pearl {
-    background-color: #fef3c7;
+  .bg-jci-navy {
+    background-color: #0A0F29;
   }
-  .text-jjc-gold {
-    color: #fbbf24;
+  .text-jci-pearl {
+    color: #F8F9FA;
   }
-  .bg-jjc-gold {
-    background-color: #fbbf24;
+  .bg-jci-pearl {
+    background-color: #F8F9FA;
   }
 }
 

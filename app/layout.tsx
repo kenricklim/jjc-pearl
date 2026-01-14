@@ -20,10 +20,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/jjcperlas_logo.jpg", type: "image/jpeg" },
+      { url: "/new jjc logo.jfif", type: "image/jpeg" },
     ],
     apple: [
-      { url: "/jjcperlas_logo.jpg", type: "image/jpeg" },
+      { url: "/new jjc logo.jfif", type: "image/jpeg" },
     ],
   },
 };
@@ -38,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-gradient-to-b from-secondary/20 to-white">
+      <body className="min-h-screen bg-pearl-100">
         <AuthProvider>
           <Navbar />
           <main>{children}</main>

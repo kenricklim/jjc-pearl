@@ -135,9 +135,9 @@ export default function ProfilePage() {
       )}
 
       {success && (
-        <Card className="mb-6 border-green-200 bg-green-50">
+        <Card className="mb-6 border-primary/20 bg-primary/10">
           <CardContent className="p-4">
-            <p className="text-green-600">Profile updated successfully!</p>
+            <p className="text-primary">Profile updated successfully!</p>
           </CardContent>
         </Card>
       )}

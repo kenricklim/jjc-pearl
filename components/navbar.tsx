@@ -81,7 +81,7 @@ export function Navbar() {
               {/* Logo Image */}
               <div className="relative h-10 w-10 flex-shrink-0">
                 <Image
-                  src="/jjcperlas_logo.jpg"
+                  src="/new jjc logo.jfif"
                   alt="JJC Puerto Princesa Perlas Logo"
                   fill
                   className="object-contain"
@@ -89,7 +89,7 @@ export function Navbar() {
                   sizes="40px"
                 />
               </div>
-              <span className="font-bold text-lg text-gray-900">
+              <span className="font-bold text-lg text-secondary">
                 Puerto Princesa Perlas
               </span>
             </div>
@@ -100,9 +100,9 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-medium transition-colors hover:text-[#0097D7] ${
                   pathname === link.href
-                    ? "text-primary"
+                    ? "text-[#0097D7] font-semibold"
                     : "text-gray-600"
                 }`}
               >
@@ -113,7 +113,7 @@ export function Navbar() {
 
           <div className="flex items-center space-x-4">
             <Link href="/membership">
-              <Button variant="outline" size="sm">
+              <Button variant="default" size="sm" className="bg-[#0097D7] hover:bg-[#0077B6] text-white shadow-md hover:shadow-lg transition-all">
                 Join Us
               </Button>
             </Link>

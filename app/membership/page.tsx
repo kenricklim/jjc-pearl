@@ -29,8 +29,7 @@ const benefits = [
 ];
 
 export default function MembershipPage() {
-  // Replace with your actual Google Form URL
-  const googleFormUrl = "https://forms.gle/YOUR_FORM_ID_HERE";
+  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdawZbjtTHc4Qn-31k2h88mv3OuO0-wpRSebXavyfg6A-o3uw/viewform";
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -40,8 +39,8 @@ export default function MembershipPage() {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">Become a Member</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <h1 className="text-5xl font-bold text-secondary mb-4">Become a Member</h1>
+        <p className="text-xl text-secondary/80 max-w-3xl mx-auto">
           Join JJC Puerto Princesa Perlas and be part of a movement that empowers
           young leaders to create positive change
         </p>
@@ -49,7 +48,7 @@ export default function MembershipPage() {
 
       {/* Benefits Section */}
       <section className="mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        <h2 className="text-3xl font-bold text-secondary mb-8 text-center">
           Why Join Us?
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -63,7 +62,7 @@ export default function MembershipPage() {
             >
               <Card className="h-full">
                 <CardHeader>
-                  <benefit.icon className="h-10 w-10 text-primary mb-4" />
+                  <benefit.icon className="h-10 w-10 text-[#0097D7] mb-4" />
                   <CardTitle className="text-lg">{benefit.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -83,7 +82,7 @@ export default function MembershipPage() {
         transition={{ duration: 0.6 }}
         className="max-w-2xl mx-auto"
       >
-        <Card className="border-2 border-primary">
+        <Card className="border-2 border-[#0097D7]">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl mb-2">Ready to Make a Difference?</CardTitle>
             <CardDescription className="text-lg">
@@ -91,12 +90,12 @@ export default function MembershipPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="bg-secondary/50 p-6 rounded-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">
+            <div className="bg-pearl-200 p-6 rounded-lg">
+              <h3 className="font-semibold text-secondary mb-2">
                 Application Process
               </h3>
-              <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                <li>Click the button below to access the official membership form</li>
+              <ol className="list-decimal list-inside space-y-2 text-secondary/80">
+                <li>Click the link below to access the official membership form</li>
                 <li>Complete all required fields in the Google Form</li>
                 <li>Submit your application</li>
                 <li>
@@ -109,7 +108,7 @@ export default function MembershipPage() {
               <Button
                 size="lg"
                 onClick={() => window.open(googleFormUrl, "_blank")}
-                className="group"
+                className="group bg-[#0097D7] hover:bg-[#0077B6] text-white shadow-lg hover:shadow-xl transition-all"
               >
                 Fill out the Official Membership Form
                 <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
