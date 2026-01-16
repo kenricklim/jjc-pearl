@@ -54,17 +54,24 @@ export default function EventsPage() {
     }
 
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("role")
         .eq("user_id", user.id)
         .single();
 
-      if (data?.role === "admin") {
-        setIsAdmin(true);
+      if (error) {
+        console.error("Error checking admin status:", error);
+        setIsAdmin(false);
+        return;
       }
+
+      const isUserAdmin = data?.role === "admin";
+      setIsAdmin(isUserAdmin);
+      console.log("Admin status checked:", { userId: user.id, role: data?.role, isAdmin: isUserAdmin });
     } catch (error) {
       console.error("Error checking admin status:", error);
+      setIsAdmin(false);
     }
   };
 
@@ -397,18 +404,20 @@ export default function EventsPage() {
                 )}
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
-                    {getStatusBadge(event.status)}
+                    <div className="flex items-center gap-2">
+                      {getStatusBadge(event.status)}
+                    </div>
                     {isAdmin && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           openDeleteDialog(event);
                         }}
-                        className="text-red-500 hover:text-red-700 transition-colors p-1 rounded hover:bg-red-50"
+                        className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-md hover:bg-red-50 flex items-center justify-center"
                         aria-label="Delete event"
                         title="Delete event"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-5 w-5" />
                       </button>
                     )}
                   </div>
