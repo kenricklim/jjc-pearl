@@ -14,15 +14,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [supabaseConfigured, setSupabaseConfigured] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Check if Supabase is configured
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    setSupabaseConfigured(!!(supabaseUrl && supabaseKey));
-  }, []);
 
   useEffect(() => {
     if (user) {
@@ -59,11 +51,6 @@ export default function LoginPage() {
   }, []);
 
   const handleGoogleLogin = async () => {
-    if (!supabaseConfigured) {
-      alert("Supabase is not configured. Please set up your .env.local file with Supabase credentials. See SETUP.md for instructions.");
-      return;
-    }
-
     try {
       setLoading(true);
       const supabase = createClient();
@@ -91,52 +78,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  if (!supabaseConfigured) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="w-full max-w-md"
-        >
-          <Card>
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-yellow-100 flex items-center justify-center">
-                <LogIn className="h-8 w-8 text-yellow-600" />
-              </div>
-              <CardTitle className="text-3xl">Supabase Not Configured</CardTitle>
-              <CardDescription className="text-base mt-2">
-                Community features require Supabase setup
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                <p className="text-sm text-gray-700 mb-2">
-                  To enable login and community features, you need to:
-                </p>
-                <ol className="list-decimal list-inside text-sm text-gray-600 space-y-1">
-                  <li>Create a Supabase account at supabase.com</li>
-                  <li>Create a new project</li>
-                  <li>Run the schema.sql file in SQL Editor</li>
-                  <li>Create a .env.local file with your credentials</li>
-                </ol>
-                <p className="text-xs text-gray-500 mt-3">
-                  See <strong>SETUP.md</strong> for detailed instructions.
-                </p>
-              </div>
-              <Link href="/">
-                <Button variant="outline" size="lg" className="w-full">
-                  Back to Home
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
