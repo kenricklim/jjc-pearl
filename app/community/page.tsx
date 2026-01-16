@@ -123,7 +123,7 @@ export default function CommunityPage() {
   }, [user, supabaseConfigured]);
 
   const setupRealtime = useCallback(() => {
-    if (!supabaseConfigured) return null;
+    if (!supabaseConfigured) return undefined;
     
     const supabase = createClient();
     const channel = supabase
@@ -135,25 +135,36 @@ export default function CommunityPage() {
           schema: "public",
           table: "forum_posts",
         },
-        (payload) => {
+        async (payload) => {
           // Fetch the new post and its profile
-          const newPost = payload.new;
-          supabase
-            .from("profiles")
-            .select("user_id, display_name, avatar_url")
-            .eq("user_id", newPost.user_id)
-            .single()
-            .then(({ data: profile }) => {
-              const postWithProfile = {
-                ...newPost,
-                profiles: profile || null
-              };
-              setForumPosts((prev) => [postWithProfile, ...prev]);
-            })
-            .catch(() => {
-              // If profile fetch fails, add post without profile
-              setForumPosts((prev) => [{ ...newPost, profiles: null }, ...prev]);
-            });
+          const newPost = payload.new as ForumPost;
+          try {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("user_id, display_name, avatar_url")
+              .eq("user_id", newPost.user_id)
+              .single();
+            
+            const postWithProfile: ForumPost = {
+              ...newPost,
+              profiles: profile ? {
+                id: profile.user_id,
+                user_id: profile.user_id,
+                display_name: profile.display_name,
+                avatar_url: profile.avatar_url,
+                role: "user" as const,
+                created_at: ""
+              } : undefined
+            };
+            setForumPosts((prev) => [postWithProfile, ...prev]);
+          } catch {
+            // If profile fetch fails, add post without profile
+            const postWithoutProfile: ForumPost = {
+              ...newPost,
+              profiles: undefined
+            };
+            setForumPosts((prev) => [postWithoutProfile, ...prev]);
+          }
         }
       )
       .subscribe();
@@ -273,10 +284,23 @@ export default function CommunityPage() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 mb-4">
-              Community features require Supabase setup. Please configure your .env.local file with Supabase credentials.
+              Community features require Supabase setup. Please configure your environment variables.
             </p>
-            <p className="text-sm text-gray-500">
-              See <strong>SETUP.md</strong> for detailed instructions.
+            <div className="space-y-2 text-sm text-gray-600">
+              <p><strong>For Local Development:</strong></p>
+              <p className="text-gray-500 ml-4">
+                Create a <code className="bg-gray-100 px-1 rounded">.env.local</code> file with your Supabase credentials.
+              </p>
+              <p className="mt-4"><strong>For Vercel Deployment:</strong></p>
+              <p className="text-gray-500 ml-4">
+                Add environment variables in Vercel Dashboard: Settings → Environment Variables
+              </p>
+              <p className="text-gray-500 ml-4">
+                Required variables: <code className="bg-gray-100 px-1 rounded">NEXT_PUBLIC_SUPABASE_URL</code> and <code className="bg-gray-100 px-1 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>
+              </p>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
+              See <strong>SETUP.md</strong> for local setup or <strong>VERCEL_ENV_SETUP.md</strong> for Vercel deployment instructions.
             </p>
           </CardContent>
         </Card>
