@@ -30,3 +30,17 @@ export type ComplaintRequest = {
   profiles?: Profile;
 };
 
+export type Event = {
+  id: string;
+  title: string;
+  description: string;
+  status: "upcoming" | "completed";
+  date: string | null;
+  time: string | null;
+  location: string | null;
+  partners: string[] | null;
+  images: string[] | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
