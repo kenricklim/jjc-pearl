@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Leaf, Image as ImageIcon, Plus, X, Upload } from "lucide-react";
+import { Calendar, MapPin, Leaf, Image as ImageIcon, Plus, X, Upload, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/components/auth-provider";
 import { createClient } from "@/lib/supabase/client";
@@ -24,6 +24,9 @@ export default function EventsPage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -159,6 +162,76 @@ export default function EventsPage() {
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
     }));
+  };
+
+  const handleDeleteEvent = async () => {
+    if (!eventToDelete || !isAdmin) return;
+
+    setDeleting(true);
+    try {
+      // Delete images from Supabase Storage if they exist
+      if (eventToDelete.images && eventToDelete.images.length > 0) {
+        // Extract file paths from URLs
+        const imagePaths = eventToDelete.images
+          .map((url) => {
+            // Extract path from Supabase Storage URL
+            // URL format: https://[project].supabase.co/storage/v1/object/public/event-images/[user-id]/[filename]
+            // Or: https://[project].supabase.co/storage/v1/object/public/event-images/[path]
+            try {
+              const urlObj = new URL(url);
+              const pathParts = urlObj.pathname.split('/');
+              const bucketIndex = pathParts.findIndex(part => part === 'event-images');
+              if (bucketIndex !== -1 && bucketIndex < pathParts.length - 1) {
+                // Get everything after 'event-images'
+                return pathParts.slice(bucketIndex + 1).join('/');
+              }
+              // Fallback to regex if URL parsing fails
+              const match = url.match(/event-images\/(.+)$/);
+              return match ? match[1] : null;
+            } catch {
+              // If URL parsing fails, try regex
+              const match = url.match(/event-images\/(.+)$/);
+              return match ? match[1] : null;
+            }
+          })
+          .filter((path): path is string => path !== null && path.length > 0);
+
+        // Delete each image from storage
+        for (const path of imagePaths) {
+          const { error: deleteError } = await supabase.storage
+            .from('event-images')
+            .remove([path]);
+
+          if (deleteError) {
+            console.error(`Error deleting image ${path}:`, deleteError);
+            // Continue even if image deletion fails
+          }
+        }
+      }
+
+      // Delete event from database
+      const { error } = await supabase
+        .from("events")
+        .delete()
+        .eq("id", eventToDelete.id);
+
+      if (error) throw error;
+
+      // Close dialog and reload events
+      setIsDeleteDialogOpen(false);
+      setEventToDelete(null);
+      loadEvents();
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert(error instanceof Error ? error.message : "Failed to delete event. Please try again.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const openDeleteDialog = (event: Event) => {
+    setEventToDelete(event);
+    setIsDeleteDialogOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -325,6 +398,19 @@ export default function EventsPage() {
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
                     {getStatusBadge(event.status)}
+                    {isAdmin && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openDeleteDialog(event);
+                        }}
+                        className="text-red-500 hover:text-red-700 transition-colors p-1 rounded hover:bg-red-50"
+                        aria-label="Delete event"
+                        title="Delete event"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                   <CardTitle className="text-xl">{event.title}</CardTitle>
                 </CardHeader>
@@ -573,6 +659,46 @@ export default function EventsPage() {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent onClose={() => setIsDeleteDialogOpen(false)}>
+          <DialogHeader>
+            <DialogTitle>Delete Event</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-gray-600">
+              Are you sure you want to delete <strong>"{eventToDelete?.title}"</strong>? This action cannot be undone.
+            </p>
+            {eventToDelete?.images && eventToDelete.images.length > 0 && (
+              <p className="text-sm text-gray-500">
+                This will also delete {eventToDelete.images.length} associated image{eventToDelete.images.length !== 1 ? 's' : ''} from storage.
+              </p>
+            )}
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsDeleteDialogOpen(false);
+                  setEventToDelete(null);
+                }}
+                disabled={deleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={handleDeleteEvent}
+                disabled={deleting}
+                className="bg-red-500 hover:bg-red-600 text-white"
+              >
+                {deleting ? "Deleting..." : "Delete Event"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Image Dialog */}
       {selectedEvent && selectedEvent.images && selectedEvent.images.length > 0 && (
