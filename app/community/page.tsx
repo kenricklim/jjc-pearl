@@ -123,7 +123,7 @@ export default function CommunityPage() {
   }, [user, supabaseConfigured]);
 
   const setupRealtime = useCallback(() => {
-    if (!supabaseConfigured) return null;
+    if (!supabaseConfigured) return undefined;
     
     const supabase = createClient();
     const channel = supabase
@@ -135,25 +135,29 @@ export default function CommunityPage() {
           schema: "public",
           table: "forum_posts",
         },
-        (payload) => {
+        async (payload) => {
           // Fetch the new post and its profile
-          const newPost = payload.new;
-          supabase
-            .from("profiles")
-            .select("user_id, display_name, avatar_url")
-            .eq("user_id", newPost.user_id)
-            .single()
-            .then(({ data: profile }) => {
-              const postWithProfile = {
-                ...newPost,
-                profiles: profile || null
-              };
-              setForumPosts((prev) => [postWithProfile, ...prev]);
-            })
-            .catch(() => {
-              // If profile fetch fails, add post without profile
-              setForumPosts((prev) => [{ ...newPost, profiles: null }, ...prev]);
-            });
+          const newPost = payload.new as ForumPost;
+          try {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("id, user_id, display_name, avatar_url, role, created_at")
+              .eq("user_id", newPost.user_id)
+              .single();
+            
+            const postWithProfile: ForumPost = {
+              ...newPost,
+              profiles: profile || undefined
+            };
+            setForumPosts((prev) => [postWithProfile, ...prev]);
+          } catch {
+            // If profile fetch fails, add post without profile
+            const postWithoutProfile: ForumPost = {
+              ...newPost,
+              profiles: undefined
+            };
+            setForumPosts((prev) => [postWithoutProfile, ...prev]);
+          }
         }
       )
       .subscribe();
